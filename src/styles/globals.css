@@ -1,0 +1,379 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display:
+    var(--font-manrope-800), var(--font-manrope), system-ui, sans-serif;
+  --font-sans:
+    var(--font-manrope), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, sans-serif;
+
+  --color-ink: #1a1a1a;
+  --color-ink-soft: #3c3c3c;
+  --color-muted: #6b6b6b;
+  --color-paper: #ffffff;
+  --color-mist: #f6f6f6;
+  --color-line: #e3e3e3;
+  --color-night: #262626;
+  --color-night-line: #3a3a3a;
+  --color-night-muted: #9b9b9b;
+  --color-live: #22c55e;
+
+  --shadow-pill: 0 1px 2px rgb(0 0 0 / 0.06), 0 6px 18px rgb(0 0 0 / 0.07);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 10px 28px rgb(0 0 0 / 0.07);
+  --shadow-button: 0 2px 4px rgb(0 0 0 / 0.18), 0 10px 22px rgb(0 0 0 / 0.22);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: #a3a3a3;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--color-ink);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  .on-dark :focus-visible {
+    outline-color: #fff;
+  }
+  [id] {
+    scroll-margin-top: 96px;
+  }
+}
+
+@layer components {
+  /* Cloud backdrop sits behind everything and never scrolls. */
+  .sky {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: #a8a8a8 url("/images/clouds.jpg") center / cover no-repeat;
+  }
+
+  /* A framed sheet: translucent grey rim, solid fill inside. */
+  .panel {
+    position: relative;
+    overflow-x: clip;
+    border: 8px solid rgb(236 236 236 / 0.72);
+    border-radius: 6px;
+    background: var(--color-paper);
+    background-clip: padding-box;
+  }
+  .panel-night {
+    background: var(--color-night);
+    color: #fff;
+  }
+
+  /* Large faint word behind a section title. */
+  .ghost {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    text-align: center;
+    overflow-x: clip;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 0.9;
+    white-space: nowrap;
+    color: rgb(0 0 0 / 0.045);
+    user-select: none;
+    pointer-events: none;
+    font-size: clamp(3.5rem, 13vw, 11.5rem);
+  }
+  .ghost-sm {
+    font-size: clamp(2.8rem, 7.4vw, 6.5rem);
+  }
+  .ghost-left {
+    text-align: left;
+  }
+  .panel-night .ghost {
+    color: rgb(255 255 255 / 0.06);
+  }
+
+  .section-title {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    font-size: clamp(1.9rem, 3.6vw, 3.1rem);
+  }
+
+  .pill {
+    display: inline-flex;
+    white-space: nowrap;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    background: #fff;
+    padding: 0.55rem 1rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    box-shadow: var(--shadow-pill);
+    border: 1px solid rgb(0 0 0 / 0.04);
+    transition:
+      transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 0.25s;
+  }
+  a.pill:hover,
+  button.pill:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 2px 4px rgb(0 0 0 / 0.06),
+      0 12px 24px rgb(0 0 0 / 0.1);
+  }
+
+  .btn-dark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-radius: 999px;
+    background: var(--color-ink);
+    color: #fff;
+    padding: 0.8rem 1.35rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    box-shadow: var(--shadow-button);
+    transition:
+      transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
+      background 0.2s;
+  }
+  .btn-dark:hover {
+    transform: translateY(-2px);
+    background: #000;
+  }
+  .btn-dark svg {
+    transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .btn-dark:hover svg {
+    transform: translate(2px, -2px);
+  }
+  .btn-dark[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .live-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--color-live);
+    box-shadow: 0 0 0 0 rgb(34 197 94 / 0.55);
+    animation: live 2.4s ease-out infinite;
+  }
+  @keyframes live {
+    70%,
+    100% {
+      box-shadow: 0 0 0 7px rgb(34 197 94 / 0);
+    }
+  }
+
+  .outline-text {
+    color: transparent;
+    -webkit-text-stroke: clamp(1.5px, 0.18vw, 3px) var(--color-ink);
+    paint-order: stroke fill;
+  }
+
+  .btn-light {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-line);
+    background: #fff;
+    color: var(--color-ink);
+    padding: 0.8rem 1.35rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition:
+      transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
+      border-color 0.2s,
+      box-shadow 0.25s;
+  }
+  .btn-light:hover {
+    transform: translateY(-2px);
+    border-color: #c9c9c9;
+    box-shadow: var(--shadow-pill);
+  }
+
+  .icon-btn {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 1rem;
+    background: #fff;
+    border: 1px solid rgb(0 0 0 / 0.04);
+    box-shadow: var(--shadow-pill);
+    transition:
+      transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 0.25s;
+  }
+  .icon-btn:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 2px 4px rgb(0 0 0 / 0.06),
+      0 12px 24px rgb(0 0 0 / 0.1);
+  }
+
+  /* ---- Hero ---- */
+  .hero-panel {
+    --hero-h: clamp(46rem, calc(100svh - 3.5rem), 58rem);
+    background-color: #fafaf8;
+  }
+  @media (min-width: 1024px) {
+    .hero-panel {
+      height: var(--hero-h);
+    }
+  }
+  /* Soft cloud texture that only shows toward the edges of the sheet. */
+  .hero-clouds {
+    position: absolute;
+    inset: 0;
+    background: url("/images/clouds.jpg") center / cover no-repeat;
+    opacity: 0.28;
+    mix-blend-mode: multiply;
+    -webkit-mask-image: radial-gradient(
+      ellipse 62% 58% at 50% 48%,
+      transparent 52%,
+      #000 100%
+    );
+    mask-image: radial-gradient(
+      ellipse 62% 58% at 50% 48%,
+      transparent 52%,
+      #000 100%
+    );
+    pointer-events: none;
+  }
+  .hero-name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.045em;
+    line-height: 0.84;
+    font-size: clamp(2.75rem, 16.5vw, 7rem);
+  }
+  @media (min-width: 1024px) {
+    .hero-name {
+      font-size: min(8.6vw, calc(var(--hero-h) * 0.168));
+    }
+  }
+  .hand {
+    font-family:
+      "Segoe Script", "Bradley Hand", "Brush Script MT", "Comic Sans MS",
+      cursive;
+  }
+  /* Portrait sits on the bottom edge of the sheet; width is capped so the head
+     always clears the navigation. The source image is 1296 x 1214. */
+  @media (min-width: 1024px) {
+    .hero-portrait {
+      position: absolute;
+      bottom: 0;
+      right: 2%;
+      width: clamp(
+        calc((var(--hero-h) - 6rem) * 0.9),
+        56%,
+        calc((var(--hero-h) - 6rem) * 1.06)
+      );
+    }
+  }
+  .portrait-btn {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 1296 / 1214;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: default;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 6%,
+      #000 94%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 6%,
+      #000 94%,
+      transparent
+    );
+  }
+  .portrait-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    user-select: none;
+  }
+  .portrait-color {
+    opacity: 0;
+    transition: opacity 500ms ease-in-out;
+  }
+  @media (hover: hover) {
+    .portrait-btn:hover .portrait-color {
+      opacity: 1;
+    }
+  }
+  .portrait-btn:focus-visible {
+    outline-offset: -4px;
+  }
+  .portrait-btn:focus-visible .portrait-color,
+  .portrait-btn[aria-pressed="true"] .portrait-color {
+    opacity: 1;
+  }
+
+  /* Scroll-driven: fades in the sheet's own colour from the bottom edge. */
+  .hero-veil {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 30;
+    height: 55%;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      rgb(250 250 248 / 0),
+      rgb(250 250 248 / 0.7) 55%,
+      #fafaf8
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .live-dot {
+    animation: none;
+  }
+  /* Hero scroll fade: inline motion styles are overridden, not branched in JS. */
+  .hero-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hero-veil {
+    opacity: 0 !important;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
